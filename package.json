@@ -1,0 +1,23 @@
+{
+  "name": "node_bot",
+  "version": "1.0.0",
+  "description": "Bot Framework- microsoft Azure\r treinamento introdutorio ao desenvolvimento de bots, \r utilizando o Bot Framework, consumo de API de Dados e integração com \r Cognitive Services, a plataforma de inteligência da Microsoft.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jean1dev/Node_Bot.git"
+  },
+  "author": "Jean",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jean1dev/Node_Bot/issues"
+  },
+  "homepage": "https://github.com/Jean1dev/Node_Bot#readme",
+  "dependencies": {
+    "botbuilder": "^3.13.1",
+    "restify": "^6.3.4"
+  }
+}
