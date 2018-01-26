@@ -1,9 +1,12 @@
 var restify = require('restify');
 var builder = require('botbuilder');
+var conexoes = require('./eastereggs')
+//var _port_ = 3978
+var _port = 8080
 
 // Setup Restify Server
 var server = restify.createServer();
-server.listen(process.env.port || process.env.PORT || 3978, function () {
+server.listen(process.env.port || process.env.PORT || _port, function () {
    console.log('%s listening to %s', server.name, server.url); 
 });
 
@@ -18,5 +21,6 @@ server.post('/api/messages', connector.listen());
 
 // Recebe as mensagens do usuário e responde repetindo cada mensagem (prefixado com 'Você disse:')
 var bot = new builder.UniversalBot(connector, function (session) {
-    session.send("Você disse: %s", session.message.text);
+    var message = conexoes(session.message.text)
+    session.send("Você disse: %s", message);
 });
