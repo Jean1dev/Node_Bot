@@ -1,6 +1,6 @@
 var restify = require('restify');
 var builder = require('botbuilder');
-var conexoes = require('./eastereggs')
+var html = require('./htmlRequest')
 //var _port_ = 3978
 var _port = 8080
 
@@ -19,8 +19,7 @@ var connector = new builder.ChatConnector({
 // Endpoint que irá monitorar as mensagens do usuário
 server.post('/api/messages', connector.listen());
 
-// Recebe as mensagens do usuário e responde repetindo cada mensagem (prefixado com 'Você disse:')
+// Recebe as mensagens do e responde repetindo cada mensagem (prefixado com 'Você disse:')
 var bot = new builder.UniversalBot(connector, function (session) {
-    var message = conexoes(session.message.text)
-    session.send("Você disse: %s", message);
+    var message = html.httpRequest(session.message.text, session)
 });
