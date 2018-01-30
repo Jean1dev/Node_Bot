@@ -7,7 +7,7 @@
     }else if(message == 'conhece o lucas'){
         msg = 'aquele otario'
     }else{
-        msg = 'NÃO ENTENDI OQ VC DISSE SEU BOSTA, ESCREVE DIREITO'
+        msg = message
     }
     return msg
 }
