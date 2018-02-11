@@ -21,6 +21,7 @@
     "botbuilder": "^3.13.1",
     "botbuilder-cognitiveservices": "^1.1.0",
     "express": "^4.16.2",
+    "formflowbotbuilder": "^0.1.4",
     "restify": "^6.3.4",
     "xmlhttprequest": "^1.8.0"
   }
