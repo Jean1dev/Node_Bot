@@ -8,3 +8,5 @@ Cognitive Services, a plataforma de inteligência da Microsoft.
 Instalação
 Faça o clone deste projeto com git clone 
 Entre na pasta do projeto e instale as dependências com npm install
+
+Converse com ele através do Telegram @jeanluca_bot

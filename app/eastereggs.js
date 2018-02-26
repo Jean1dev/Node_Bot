@@ -6,6 +6,8 @@
         msg = 'aquele viadinho'
     }else if(message == 'conhece o lucas'){
         msg = 'aquele otario'
+    }else if(message == 'conhece o felps'){
+        msg = 'o deus do foxpro'
     }else{
         msg = message
     }
