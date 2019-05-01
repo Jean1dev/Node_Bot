@@ -4,7 +4,7 @@ const session = require('telegraf/session')
 const Stage = require('telegraf/stage')
 const Scene = require('telegraf/scenes/base')
 const { enter, leave } = Stage
-const bot = new Telegraf(env.token)
+const bot = new Telegraf(env.key)
 
 bot.start(ctx => {
     const name = ctx.update.message.from.first_name

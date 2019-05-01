@@ -3,7 +3,7 @@ const Telegraf = require('telegraf')
 const Extra = require('telegraf/extra')
 const Markup = require('telegraf/markup')
 const axios = require('axios')
-const bot = new Telegraf(env.token)
+const bot = new Telegraf(env.key)
 
 const tecladoOpcoes = Markup.keyboard([
     ['O que são bots?', 'O que verei no curso?'],
