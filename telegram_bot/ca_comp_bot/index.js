@@ -5,15 +5,9 @@ const Markup = require('telegraf/markup')
 const bot = new Telegraf(env.key_comp)
 const _inscricao = require('./controllers/inscricaoController')
 const db = require('./config/config')
-const state = {
-    inscricao: false,
-    codigo_aluno: 0,
-    nome_aluno: '',
-    numero_contato: '',
-    id_telegram: ''
-}
 
 db()
+bot.use(session())
 const tecladoOpcoes = Markup.keyboard([
     ['Informacoes sobre o Centro academico'],
     ['Inscricao para os minicursos'],
@@ -24,7 +18,14 @@ const tecladoOpcoes = Markup.keyboard([
 bot.start(async ctx => {
     let nome = ctx.update.message.from.first_name
     await ctx.replyWithMarkdown(`*Olá, ${nome}!*\nEu sou o ChatBot do Centro Academico da computacao`)
-    await ctx.replyWithMarkdown(`_Posso te ajudar em algo?_`, tecladoOpcoes)
+    await ctx.replyWithMarkdown(`Use os botoes a baixo para uma melhor interacao`, tecladoOpcoes)
+    ctx.session.state = {
+        inscricao: false,
+        codigo_aluno: 0,
+        nome_aluno: '',
+        numero_contato: '',
+        id_telegram: ''
+    }
 })
 
 bot.hears('Prestacao de contas', ctx => {
@@ -35,36 +36,45 @@ bot.hears('Informacoes sobre o Centro academico', ctx => {
     ctx.replyWithMarkdown("Esta rolando um sorteio de 4 ingressos para os minicursos, corre la pra fazer sua inscricao", tecladoOpcoes)
 })
 
-bot.hears('Inscricao para os minicursos', ctx => {
-    state.inscricao = true
-    state.id_telegram = ctx.update.message.from.id
-    ctx.reply('OK, me fala qual é o seu codigo de aluno (aquele q vc usa pra acessar o ava)')
+bot.hears('Inscricao para os minicursos', async ctx => {
+    let obj = await getByIdTelegram(ctx.update.message.from.id)
+    if(obj.length == 0 || obj == null){
+        ctx.session.state.inscricao = true
+        ctx.session.state.id_telegram = ctx.update.message.from.id
+        ctx.reply('OK, me fala qual é o seu codigo de aluno (aquele q vc usa pra acessar o ava)')
+        return
+    }
+    ctx.reply(`Voce ja fez sua inscricao ${ctx.update.message.from.first_name}`)
 })
 
 bot.on('text', async ctx => {
-    if(!state.inscricao){
+    
+    if(ctx.session.state == undefined){
+        ctx.reply(`Ocorreu um problema digite /start para recomecar`)
+        return
+    }
+    if(!ctx.session.state.inscricao){
         let obj = await getByIdTelegram(ctx.update.message.from.id)
         if(obj.length == 0 || obj == null){
             ctx.reply('Ainda estou em fase de aprendizado, Nao sei o que dizer')
             return
         }
-        ctx.reply(`Voce ja fez suas inscricao ${ctx.update.message.from.first_name}`)
-
-    }else if(state.codigo_aluno == 0){
-        state.codigo_aluno = ctx.message.text
+        ctx.reply(`Voce ja fez sua inscricao ${ctx.update.message.from.first_name}`)
+    }else if(ctx.session.state.codigo_aluno == 0){
+        ctx.session.state.codigo_aluno = ctx.message.text
         ctx.reply('OK, agora me fala qual é o seu nome')
-    }else if(state.nome_aluno == ''){
-        state.nome_aluno = ctx.message.text
+    }else if(ctx.session.state.nome_aluno == ''){
+        ctx.session.state.nome_aluno = ctx.message.text
         ctx.reply('Blz, passa o numero para entrarmos em contato')
     }else{
-        state.numero_contato = ctx.message.text
+        ctx.session.state.numero_contato = ctx.message.text
         ctx.reply('So um momento')
-        if(cadastrar()){
+        if(cadastrar(ctx)){
             ctx.reply(`Blz ${ctx.update.message.from.first_name} cadastro feito, Boa sorte`)
         }else{
             ctx.reply(`Ocorreu um problema`)
         }
-        state.inscricao = false
+        ctx.session.state.inscricao = false
     }
 })
 
@@ -73,18 +83,17 @@ bot.on('sticker', ctx => {
     ctx.reply(`Ta mandando sticke ne safado ${sticker.emoji}`)
 })
 
-const cadastrar = async () => {
+const cadastrar = async ctx => {
     return await _inscricao.store({
-        codigo_aluno: state.codigo_aluno,
-        nome_aluno: state.nome_aluno,
-        numero_contato: state.numero_contato,
-        id_telegram: state.id_telegram
+        codigo_aluno: ctx.session.state.codigo_aluno,
+        nome_aluno: ctx.session.state.nome_aluno,
+        numero_contato: ctx.session.state.numero_contato,
+        id_telegram: ctx.session.state.id_telegram
     })
 }
 
-const getByIdTelegram = async (id) => {
+const getByIdTelegram = async id => {
     return await _inscricao.getByIdTelegram(id)
 }
 
-bot.use(session())
 bot.startPolling()
