@@ -68,7 +68,7 @@ bot.on('text', async ctx => {
         ctx.reply('Blz, passa o numero para entrarmos em contato')
     }else{
         ctx.session.state.numero_contato = ctx.message.text
-        ctx.reply('So um momento')
+        await ctx.reply('So um momento')
         if(cadastrar(ctx)){
             ctx.reply(`Blz ${ctx.update.message.from.first_name} cadastro feito, Boa sorte`)
         }else{
