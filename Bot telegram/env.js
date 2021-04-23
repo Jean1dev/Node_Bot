@@ -1,6 +1,7 @@
 // renomear esse arquivo para .env
-module.exports.token = `KEY DA API DO TELEGRAMA AQUI`
-module.exports.token_comp = ``
+// module.exports.token = `1748580514:AAEc_zpRevFQvhhZWCY79Vpbz26BSCzXp4c`
+// module.exports.token_comp = ``
+const token = `1748580514:AAEc_zpRevFQvhhZWCY79Vpbz26BSCzXp4c`
 
 module.exports = {
     key: token,
