@@ -1,8 +1,9 @@
-const env = require('../.env')
+const API_KEY = '1748580514:AAEc_zpRevFQvhhZWCY79Vpbz26BSCzXp4c'
 const Telegraf = require('telegraf')
 const session = require('telegraf/session')
 const Markup = require('telegraf/markup')
-const bot = new Telegraf(env.key_comp)
+const bot = new Telegraf(API_KEY)
+
 const _inscricao = require('./controllers/inscricaoController')
 const db = require('./config/config')
 
@@ -38,7 +39,7 @@ bot.hears('Informacoes sobre o Centro academico', ctx => {
 
 bot.hears('Inscricao para os minicursos', async ctx => {
     let obj = await getByIdTelegram(ctx.update.message.from.id)
-    if(obj.length == 0 || obj == null){
+    if (obj.length == 0 || obj == null) {
         ctx.session.state.inscricao = true
         ctx.session.state.id_telegram = ctx.update.message.from.id
         ctx.reply('OK, me fala qual é o seu codigo de aluno (aquele q vc usa pra acessar o ava)')
@@ -48,30 +49,30 @@ bot.hears('Inscricao para os minicursos', async ctx => {
 })
 
 bot.on('text', async ctx => {
-    
-    if(ctx.session.state == undefined){
+
+    if (ctx.session.state == undefined) {
         ctx.reply(`Ocorreu um problema digite /start para recomecar`)
         return
     }
-    if(!ctx.session.state.inscricao){
+    if (!ctx.session.state.inscricao) {
         let obj = await getByIdTelegram(ctx.update.message.from.id)
-        if(obj.length == 0 || obj == null){
+        if (obj.length == 0 || obj == null) {
             ctx.reply('Ainda estou em fase de aprendizado, Nao sei o que dizer')
             return
         }
         ctx.reply(`Voce ja fez sua inscricao ${ctx.update.message.from.first_name}`)
-    }else if(ctx.session.state.codigo_aluno == 0){
+    } else if (ctx.session.state.codigo_aluno == 0) {
         ctx.session.state.codigo_aluno = ctx.message.text
         ctx.reply('OK, agora me fala qual é o seu nome')
-    }else if(ctx.session.state.nome_aluno == ''){
+    } else if (ctx.session.state.nome_aluno == '') {
         ctx.session.state.nome_aluno = ctx.message.text
         ctx.reply('Blz, passa o numero para entrarmos em contato')
-    }else{
+    } else {
         ctx.session.state.numero_contato = ctx.message.text
         await ctx.reply('So um momento')
-        if(cadastrar(ctx)){
+        if (cadastrar(ctx)) {
             ctx.reply(`Blz ${ctx.update.message.from.first_name} cadastro feito, Boa sorte`)
-        }else{
+        } else {
             ctx.reply(`Ocorreu um problema`)
         }
         ctx.session.state.inscricao = false
